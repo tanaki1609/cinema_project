@@ -19,7 +19,9 @@ def film_detail_api_view(request, id):
 @api_view(['GET'])
 def film_list_api_view(request):
     # step 1: Collect films from DB (QuerySet)
-    films = Film.objects.all()
+    films = Film.objects.select_related('director').prefetch_related(
+        'genres',
+        'reviews').all()
 
     # step 2: Reformat (Serialize) films
     data = FilmListSerializer(films, many=True).data
